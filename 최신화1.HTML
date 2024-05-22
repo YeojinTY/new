@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>강화 아이템 정보</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    padding-top: 20px;
+  }
+  .container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    padding: 30px;
+    margin-bottom: 20px;
+  }
+  .item-image {
+    max-width: 100%;
+    height: auto;
+  }
+  .item-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 20px;
+  }
+  .item-description {
+    margin-top: 10px;
+  }
+  .enhancement-count {
+    font-size: 18px;
+    display: inline-block;
+    margin-left: 5px;
+  }
+  .success-text {
+    color: green;
+  }
+  .failure-text {
+    color: red;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <img src="sword.jpg" alt="강화 아이템" class="item-image" id="itemImage">
+    </div>
+    <div class="col-md-6">
+      <h1 class="item-title" id="itemName">검</h1>
+      <p class="item-description">
+        강화 아이템에 대한 설명이 들어갈 부분입니다. 이 부분은 원하는 내용으로 수정할 수 있습니다.
+      </p>
+      <h2 id="enchanceRate">강화 확률</h2>
+      <p>
+        <span id="successRate">성공 확률: 80%</span><br>
+        <span id="failureRate">실패 확률: 20%</span>
+      </p>
+      <button class="btn btn-primary" onclick="enhance()" id="enhanceButton">강화하기</button>
+      <span id="successCount" class="enhancement-count"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+var successCount = 0;
+var successRate = 0.8; // 초기 성공 확률
+var failureRate = 0.2; // 초기 실패 확률
+
+function enhance() {
+  var random = Math.random(); // 0과 1 사이의 랜덤한 숫자 생성
+  var successCountElement = document.getElementById("successCount");
+  var successRateElement = document.getElementById("successRate");
+  var failureRateElement = document.getElementById("failureRate");
+  var enhanceButton = document.getElementById("enhanceButton");
+  var enchanceRateElement = document.getElementById("enchanceRate")
+
+  if (successCount < 5) {
+    if (random < successRate) {
+      // 성공할 때
+      successCount++;
+      successCountElement.innerHTML = "<span class='success-text'>성공+</span>" + successCount;
+    } else {
+      // 실패할 때
+      successCount = 0; // 숫자 초기화
+      successCountElement.innerHTML = "<span class='failure-text'>실패</span>";
+    }
+  } else {
+    if (document.getElementById("itemImage").src.includes("sword.jpg")) 
+    {// 검이 +5로 강화됐을 때 총으로 바뀌어서 강화 단계를 다시 초기화
+      document.getElementById("itemImage").src = "gun.jpg";
+      document.getElementById("itemName").innerHTML = "총";
+      successRate = 0.7; // 성공 확률 변경
+      failureRate = 0.3; // 실패 확률 변경
+      successRateElement.textContent = "성공 확률: 70%";
+      failureRateElement.textContent = "실패 확률: 30%";
+      successCountElement.innerHTML = "<span class='success-text'>총으로 변환!</span>";} 
+    else if (document.getElementById("itemImage").src.includes("gun.jpg")) {
+      // 총이 +5로 강화됐을 때 로켓으로 바뀌어서 강화 단계를 다시 초기화
+      document.getElementById("itemImage").src = "rocket.jpg";
+      document.getElementById("itemName").innerHTML = "로켓";
+      successRate = 0.6; // 성공 확률 변경
+      failureRate = 0.4; // 실패 확률 변경
+      successRateElement.textContent = "성공 확률: 60%";
+      failureRateElement.textContent = "실패 확률: 40%";
+      successCountElement.innerHTML = "<span class='success-text'>로켓으로 변환!</span>";}
+    else if (document.getElementById("itemImage").src.includes("rocket.jpg")) 
+      {// 로켓이 +5로 강화됐을 때 핵으로 바뀌어서 강화 단계를 다시 초기화
+      document.getElementById("itemImage").src = "nuclear.jpg";
+      document.getElementById("itemName").innerHTML = "핵";
+      successRate = 0.5; // 성공 확률 변경
+      failureRate = 0.5; // 실패 확률 변경
+      successRateElement.textContent = "성공 확률: 50%";
+      failureRateElement.textContent = "실패 확률: 50%";
+      successCountElement.innerHTML = "<span class='success-text'>핵으로 변환!</span>";}
+    else if (document.getElementById("itemImage").src.includes("nuclear.jpg")) 
+    {// 핵이 +5로 강화됐을 때 풍선으로 바뀌고 강화하기 버튼 비활성화 및 텍스트 변경
+      document.getElementById("itemImage").src = "balloon.jpg";
+      document.getElementById("itemName").innerHTML = "";
+      successCountElement.innerHTML = "<span class='success-text'></span>";
+      enhanceButton.disabled = true;
+      enhanceButton.innerHTML = "축하합니다";
+      successRateElement.textContent = " ";
+      failureRateElement.textContent = " ";
+      enchanceRateElement.textContent = " ";}
+    successCount = 0; // 숫자 초기화
+  }
+}
+</script>
+
+</body>
+</html>

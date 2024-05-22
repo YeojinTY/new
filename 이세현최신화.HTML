@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>강화 아이템 정보</title>
+<link rel="stylesheet" href="star.css">
+<link rel="stylesheet" href="css.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<style>
+  .item-image{
+    width: 300px;
+  }
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #0a121964;
+    padding-top: 20px;
+  }
+  .title{
+    margin-top: -10px;
+    background: rgba(0, 0, 0, 0.31);
+    box-shadow: 0 0 10px rgba(0,0,0,0.1)
+  }
+  .container {
+    background-color: #ffffff63;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    padding: 30px;
+    margin-bottom: 20px;
+  }
+  .item-image {
+    max-width: 100%;
+    height: auto;
+  }
+  .item-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 20px;
+  }
+  .item-description {
+    margin-top: 10px;
+  }
+  .enhancement-count {
+    font-size: 18px;
+    display: inline-block;
+    margin-left: 5px;
+  }
+  .success-text {
+    color: green;
+  }
+  .failure-text {
+    color: red;
+  }        .star-rating {
+    display: flex;
+    justify-content: center;
+    /* 별점을 가운데 정렬 */
+    }
+
+    .star {
+        appearance: none;
+        padding: 1px;
+    }
+
+    .star::after {
+        content: '☆';
+        color: rgb(255, 247, 0);
+        font-size: 20px;
+    }
+
+    .star-rating .star:hover::after,
+    .star-rating .star:has(~ .star:hover)::after,
+    .star-rating .star:checked::after,
+    .star-rating .star:has(~ .star:checked)::after {
+        content: '★';
+    }
+
+    .star:hover~.star::after {
+        content: '☆';
+    }
+
+    .star {
+        color: blue;
+        /* 매기는 별점 색상 */
+    }
+
+    .footer .star {
+        color: red;
+        /* 댓글에 대한 별점 색상 */
+    }
+
+    .footer #average-rating {
+        color: red;
+        font-size: 24px;
+    }
+
+</style>
+</head>
+<body>
+  <div class="header">
+    <h1>강화 시뮬레이션</h1>
+  </div>
+
+  <div class="nav">
+    <a href="#">강화하기</a>
+    <a href="#">도감</a>
+  </div>
+  <div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <img src="sword.jpg" alt="강화 아이템" class="item-image" id="itemImage">
+    </div>
+    <div class="col-md-6">
+      <h1 class="item-title" id="itemName">검</h1>
+      <p class="item-description">
+        강화 아이템에 대한 설명이 들어갈 부분입니다. 이 부분은 원하는 내용으로 수정할 수 있습니다.
+      </p>
+      <h2 id="enchanceRate">강화 확률</h2>
+      <p>
+        <span id="successRate">성공 확률: 80%</span><br>
+        <span id="failureRate">실패 확률: 20%</span>
+      </p>
+      <button class="btn btn-primary" type="button" onclick="enhance()" id="enhanceButton">강화하기</button>
+      <span id="successCount" class="enhancement-count"></span>
+    </div>
+  </div>
+  </div>
+  <div class="footer">
+    <form class="rating-form">
+      <!-- 별점 입력란 -->
+      <label for="rating">별점을 선택해 주세요.</label><br>
+      <div class="star-rating">
+          <input type="radio" class="star" value="1" name="rating">
+          <input type="radio" class="star" value="2" name="rating">
+          <input type="radio" class="star" value="3" name="rating">
+          <input type="radio" class="star" value="4" name="rating">
+          <input type="radio" class="star" value="5" name="rating">
+      </div>
+
+      <!-- 코멘트 입력 폼 -->
+      <table class="rating-form-table">
+          <tr>
+              <td>
+                  <label for="comment">댓글<div id="comment-count"></div></label>
+              </td>
+              <td><textarea id="comment" name="comment" placeholder="댓글을 입력하세요."></textarea>
+              </td>
+          </tr>
+          <tr>
+              <td>
+                  <label for="name">이름:</label>
+              </td>
+              <td><input type="text" id="name" name="name"></td>
+              <td><label for="password">비밀번호:</label></td>
+              <td><input type="password" id="password" name="password"></td>
+              </td>
+              <td>
+                  <button type="button" onclick="saveRatingAndComment()">작성하기</button>
+              </td>
+          </tr>
+      </table>
+
+      <!-- 별점과 코멘트를 표시할 영역 -->
+      <div id="rating-comments">
+          <h3>별점과 댓글</h3>
+          <div id="average-rating"></div>
+          <ul id="comments-list"></ul>
+      </div>
+    </form>
+  </div>
+
+<script>
+var successCount = 0;
+var successRate = 0.8; // 초기 성공 확률
+var failureRate = 0.2; // 초기 실패 확률
+
+function enhance() {
+  var random = Math.random(); // 0과 1 사이의 랜덤한 숫자 생성
+  var successCountElement = document.getElementById("successCount");
+  var successRateElement = document.getElementById("successRate");
+  var failureRateElement = document.getElementById("failureRate");
+  var enhanceButton = document.getElementById("enhanceButton");
+  var enchanceRateElement = document.getElementById("enchanceRate")
+
+  if (successCount < 5) {
+    if (random < successRate) {
+      // 성공할 때
+      successCount++;
+      successCountElement.innerHTML = "<span class='success-text'>성공+</span>" + successCount;
+    } else {
+      // 실패할 때
+      successCount = 0; // 숫자 초기화
+      successCountElement.innerHTML = "<span class='failure-text'>실패</span>";
+    }
+  } else {
+    if (document.getElementById("itemImage").src.includes("sword.jpg")) 
+    {// 검이 +5로 강화됐을 때 총으로 바뀌어서 강화 단계를 다시 초기화
+      document.getElementById("itemImage").src = "gun.jpg";
+      document.getElementById("itemName").innerHTML = "총";
+      successRate = 0.7; // 성공 확률 변경
+      failureRate = 0.3; // 실패 확률 변경
+      successRateElement.textContent = "성공 확률: 70%";
+      failureRateElement.textContent = "실패 확률: 30%";
+      successCountElement.innerHTML = "<span class='success-text'>총으로 변환!</span>";} 
+    else if (document.getElementById("itemImage").src.includes("gun.jpg")) {
+      // 총이 +5로 강화됐을 때 로켓으로 바뀌어서 강화 단계를 다시 초기화
+      document.getElementById("itemImage").src = "rocket.jpg";
+      document.getElementById("itemName").innerHTML = "로켓";
+      successRate = 0.6; // 성공 확률 변경
+      failureRate = 0.4; // 실패 확률 변경
+      successRateElement.textContent = "성공 확률: 60%";
+      failureRateElement.textContent = "실패 확률: 40%";
+      successCountElement.innerHTML = "<span class='success-text'>로켓으로 변환!</span>";}
+    else if (document.getElementById("itemImage").src.includes("rocket.jpg")) 
+      {// 로켓이 +5로 강화됐을 때 핵으로 바뀌어서 강화 단계를 다시 초기화
+      document.getElementById("itemImage").src = "nuclear.jpg";
+      document.getElementById("itemName").innerHTML = "핵";
+      successRate = 0.5; // 성공 확률 변경
+      failureRate = 0.5; // 실패 확률 변경
+      successRateElement.textContent = "성공 확률: 50%";
+      failureRateElement.textContent = "실패 확률: 50%";
+      successCountElement.innerHTML = "<span class='success-text'>핵으로 변환!</span>";}
+    else if (document.getElementById("itemImage").src.includes("nuclear.jpg")) 
+    {// 핵이 +5로 강화됐을 때 풍선으로 바뀌고 강화하기 버튼 비활성화 및 텍스트 변경
+      document.getElementById("itemImage").src = "balloon.jpg";
+      document.getElementById("itemName").innerHTML = "";
+      successCountElement.innerHTML = "<span class='success-text'></span>";
+      enhanceButton.disabled = true;
+      enhanceButton.innerHTML = "축하합니다";
+      successRateElement.textContent = " ";
+      failureRateElement.textContent = " ";
+      enchanceRateElement.textContent = " ";}
+    successCount = 0; // 숫자 초기화
+  }
+}
+// 별점과 코멘트를 저장할 배열
+var ratings = [];
+        var comments = [];
+        var maxCommentLength = 200;
+
+        // DOM 요소에 대한 참조
+        var commentInput = document.getElementById('comment');
+        var commentCountElement = document.getElementById('comment-count');
+        var averageRatingElement = document.getElementById('average-rating');
+
+        // 입력한 코멘트의 길이를 확인하고 제한을 적용하는 함수
+        function saveRatingAndComment() {
+            var comment = commentInput.value;
+            if (comment.trim().length === 0) {
+                alert('댓글을 입력하세요.');
+                return;
+            }
+            if (comment.length > maxCommentLength) {
+                alert('댓글은 최대 ' + maxCommentLength + '자까지 입력할 수 있습니다.');
+                return;
+            }
+
+            // 선택된 별점
+            var selectedRating = document.querySelector('input[name="rating"]:checked');
+            if (!selectedRating) {
+                alert('별점을 선택해주세요.');
+                return;
+            }
+
+            // 입력된 이름과 비밀번호
+            var name = document.getElementById('name').value;
+            var password = document.getElementById('password').value;
+
+            // 현재 시간
+            var currentTime = new Date();
+            var timeString = currentTime.toLocaleString();
+
+            // 별점과 코멘트를 배열에 저장
+            ratings.push(selectedRating.value);
+            comments.push({ name: name, comment: comment, password: password, time: timeString, rating: selectedRating.value });
+
+            // 저장된 별점과 코멘트를 표시
+            displayRatingsAndComments();
+            // 댓글 수 업데이트
+            updateCommentCount();
+            // 평균 별점 계산 및 표시
+            calculateAndDisplayAverageRating();
+        }
+
+        // 별점과 코멘트를 표시하는 함수
+        function displayRatingsAndComments() {
+            // 평균 별점 표시
+            var averageRating = calculateAverageRating();
+            averageRatingElement.innerHTML = '평균 별점: ' + '★'.repeat(parseInt(averageRating)) + '☆'.repeat(5 - parseInt(averageRating)) + ' (' + averageRating.toFixed(1) + '점)';
+
+            // 코멘트 목록 표시
+            var commentsList = document.getElementById('comments-list');
+            commentsList.innerHTML = '';
+            comments.forEach(function (comment, index) {
+                var li = document.createElement('li');
+                li.textContent = comment.name + ': ' + comment.comment + ' (' + comment.time + ')';
+
+                // 개별 댓글의 별점을 별표시로 변경
+                // 개별 댓글의 별점을 별표시로 변경
+                var ratingSpan = document.createElement('span');
+                ratingSpan.className = 'star';
+                ratingSpan.textContent = '★'.repeat(parseInt(comment.rating)) + '☆'.repeat(5 - parseInt(comment.rating));
+
+
+                var ratingNumber = document.createElement('span');
+                ratingNumber.textContent = '(' + comment.rating + '점)';
+
+                var editButton = document.createElement('button');
+                editButton.textContent = '수정';
+                editButton.onclick = function () {
+                    var newPassword = prompt('새로운 비밀번호를 입력하세요.');
+                    if (newPassword !== null && newPassword.trim() !== '') {
+                        comments[index].password = newPassword;
+                        alert('비밀번호가 변경되었습니다.');
+                    } else {
+                        alert('비밀번호를 입력하세요.');
+                    }
+                };
+
+                var deleteButton = document.createElement('button');
+                deleteButton.textContent = '삭제';
+                deleteButton.onclick = function () {
+                    var inputPassword = prompt('비밀번호를 입력하세요.');
+                    if (inputPassword === comments[index].password) {
+                        comments.splice(index, 1);
+                        alert('댓글이 삭제되었습니다.');
+                        displayRatingsAndComments();
+                        updateCommentCount();
+                        calculateAndDisplayAverageRating();
+                    } else {
+                        alert('비밀번호가 일치하지 않습니다.');
+                    }
+                };
+
+                li.appendChild(ratingSpan);
+                li.appendChild(ratingNumber);
+                li.appendChild(editButton);
+                li.appendChild(deleteButton);
+
+                commentsList.appendChild(li);
+            });
+        }
+
+        // 평균 별점 계산하는 함수
+        function calculateAverageRating() {
+            var totalRating = ratings.reduce(function (acc, rating) {
+                return acc + parseInt(rating);
+            }, 0);
+            return totalRating / ratings.length;
+        }
+
+        // 댓글 수 업데이트 함수
+        function updateCommentCount() {
+            commentCountElement.textContent = '(' + comments.length + ')';
+        }
+</script>
+
+</body>
+</html>

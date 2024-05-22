@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>강화 시뮬레이션</title>
+
+
+    <style>
+        div.item {
+            margin: 100px 70px;
+            font-size: 20px;
+            position: relative;
+        }
+
+        div.container {
+            background: palevioletred;
+            padding: 10px;
+        }
+
+        .box {
+            width: 200px; /* 너비 설정 */
+            height: 200px; /* 높이 설정 */
+            border: 2px solid black; /* 테두리 설정 */
+            padding: 20px; /* 안쪽 여백 설정 */
+            margin: 0 auto; /* 가로 방향 가운데 정렬 */
+            /* 수직 방향 가운데 정렬 */
+            position: absolute;
+            top: 35%;
+            left: 18%;
+            transform: translate(-50%, -50%);
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            position: absolute;
+            bottom:390px; /* 아래로 이동 */
+            left: 15%; /* 가운데 정렬 */
+            transform: translateX(-50%); /* 가운데 정렬을 위해 */
+
+        }
+
+        button.refresh {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 390px; /* 아래로 이동 */
+            left:21%; /* 우측 정렬 */
+            transform: translateX(-50%); /* 가운데 정렬을 위해 */
+        }
+
+        div.reinforce {
+            font-size: 18px; /* 텍스트 크기를 줄입니다. */
+            position: absolute;
+            bottom: 460px; /* 아래로 이동 */
+            left: 18%; /* 가운데 정렬 */
+            transform: translateX(-50%); /* 가운데 정렬을 위해 */
+        }
+
+        fieldset {
+            margin-top: 630px; /* 별점 요소를 아래로 이동 */
+        }
+        /* star.css */
+        #myform fieldset{
+            display: inline-block;
+            direction: rtl;
+            border:0;
+        }
+        #myform fieldset legend{
+            text-align: right;
+        }
+
+        #myform input[type=radio]{
+            display: none;
+        }
+        #myform label{
+            font-size: 3em;
+            color: transparent;
+            text-shadow: 0 0 0 #f0f0f0;
+        }
+        #myform label:hover{
+            text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+        }
+        #myform label:hover ~ label{
+            text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+        }
+        #myform input[type=radio]:checked ~ label{
+            text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+        }
+        #reviewContents {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            box-sizing: border-box;
+            border: solid 1.5px #D3D3D3;
+            border-radius: 5px;
+            font-size: 16px;
+            resize: none;
+        }
+
+    </style>
+
+    
+
+    <script>
+        var enhanceCount = 0;
+
+        function enhanceItem() {
+            enhanceCount++;
+            document.getElementById('enhanceCount').textContent = enhanceCount;
+
+            var successRate = Math.random(); // 강화 성공률은 랜덤으로 생성
+            var isSuccess = successRate > 0.5; // 강화 성공 여부 결정
+
+            if (isSuccess) {
+                document.querySelector('.reinforce').textContent = '강화 성공!';
+                document.querySelector('.reinforce').style.color = 'green';
+            } else {
+                document.querySelector('.reinforce').textContent = '강화 실패!';
+                document.querySelector('.reinforce').style.color = 'red';
+            }
+        }
+
+        function refreshPage() {
+            location.reload();
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <span style="font-size: 30px;">simulation</span>
+    </div>
+    <div class="box">
+        <div class="item">아이템</div>
+    </div>
+    <div class="reinforce">강화 횟수: <span id="enhanceCount">0</span></div>
+    <button onclick="enhanceItem()">강화하기</button> 
+    <button class="refresh" onclick="refreshPage()">새로고침</button>
+    <br>
+    
+    <form class="mb-3" name="myform" id="myform" method="post">
+        <fieldset>
+            <span class="text-bold">별점을 선택해주세요</span>
+            <input type="radio" name="reviewStar" value="5" id="rate1"><label
+                for="rate1">★</label>
+            <input type="radio" name="reviewStar" value="4" id="rate2"><label
+                for="rate2">★</label>
+            <input type="radio" name="reviewStar" value="3" id="rate3"><label
+                for="rate3">★</label>
+            <input type="radio" name="reviewStar" value="2" id="rate4"><label
+                for="rate4">★</label>
+            <input type="radio" name="reviewStar" value="1" id="rate5"><label
+                for="rate5">★</label>
+        </fieldset>
+        <div>
+            <textarea class="col-auto form-control" type="text" id="reviewContents"
+                      placeholder="평가남겨주세요"></textarea>
+        </div>
+    </form> 
+</body>
+</html>

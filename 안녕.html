@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강화게임 시뮬레이터</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        #header {
+            background-color: #333;
+            color: white;
+            text-align: right;
+            padding: 10px;
+        }
+        #enhancementGame {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            text-align: center;
+        }
+        #itemImage {
+            width: 200px;
+            height: 200px;
+            margin-bottom: 20px;
+            border: 1px solid #333;
+            background-image: url('default_item_image.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        #enhanceButton {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #successImage {
+            display: none;
+            width: 150px;
+            height: 150px;
+            margin-top: 20px;
+        }
+        #comments {
+            width: 80%;
+            margin: auto;
+            margin-top: 50px;
+            padding: 20px;
+            background-color: #f2f2f2;
+        }
+        #commentInput {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        #submitComment {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <img src="icon.png" alt="아이콘" style="width: 50px; height: 50px;">
+    </div>
+
+    <div id="enhancementGame">
+        <h1>강화게임 시뮬레이터</h1>
+        <div id="itemImage"></div>
+        <button id="enhanceButton">강화하기</button>
+        <img src="success_image.png" id="successImage">
+    </div>
+
+    <div id="comments">
+        <h2>별점 평가 및 댓글</h2>
+        <textarea id="commentInput" placeholder="댓글을 입력해주세요"></textarea><br>
+        <button id="submitComment">댓글 남기기</button>
+    </div>
+
+    <script>
+        // JavaScript 코드는 여기에 추가할 수 있어요
+    </script>
+</body>
+</html>
